@@ -1,21 +1,20 @@
-Counter = {}
+local Counter = {}
 Counter.__index = Counter
-
-local count = 0
 
 function Counter:new(o)
     o = o or {}
+    o.count = o.count or 0
     setmetatable(o, self)
-    self.__index = self
     return o
 end
 
 function Counter:addCount()
-    count = count +1
+    self.count = self.count +1
 end
 
 function Counter:draw()
-    love.graphics.print(count, 0, 0)
+    love.graphics.setColor(1,1,1)
+    love.graphics.print(self.count, 0, 0)
 end
 
 return Counter

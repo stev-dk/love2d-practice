@@ -1,4 +1,4 @@
-Block = {}
+local Block = {}
 Block.__index = Block
 
 local GRAVITY = 128
@@ -7,6 +7,7 @@ local WIDTH = 1
 local HEIGHT = 1
 local RGB_MIN = 50 -- higher value will results in more vibrant colours
 local RGB_MAX = 255
+local DEBUG = false
 
 local blockSprites = {}
 
@@ -25,10 +26,9 @@ end
 
 function Block:new(o)
     o = o or {}
-    o.counter = o.counter
-    o.SCREEN_HEIGHT = o.SCREEN_HEIGHT
-    o.sprite = o.sprite or randomSprite()
+    o.sprite = randomSprite()
     o.colors = randomColors()
+    o.isMarkedForRemoval = false
 
     if not blockSprites[o.sprite] then
         blockSprites[o.sprite] = love.graphics.newImage(o.sprite)
@@ -46,7 +46,8 @@ end
 
 function Block:update(dt)
     self.yPosition = self.yPosition + (GRAVITY * dt)
-    if self.yPosition > self.SCREEN_HEIGHT then
+
+    if self.yPosition > self.SCREEN_HEIGHT and not self.isMarkedForRemoval then
         self.counter:addCount()
     end
 end
@@ -56,8 +57,14 @@ function Block:draw()
     love.graphics.draw(blockSprites[self.sprite], self.xPosition, self.yPosition, math.deg(0), WIDTH, HEIGHT)
 
     -- DEBUG
-    love.graphics.print(string.format('R: %i, G: %i, B: %i', self.colors[1], self.colors[2], self.colors[3]), self.xPosition, self.yPosition - 32)
+    if DEBUG then
+        love.graphics.print(string.format('R: %i, G: %i, B: %i', self.colors[1], self.colors[2], self.colors[3]), self.xPosition, self.yPosition - 32)
+    end
     -- DEBUG
+end
+
+function Block:markForRemoval()
+    self.isMarkedForRemoval = true
 end
 
 return Block
