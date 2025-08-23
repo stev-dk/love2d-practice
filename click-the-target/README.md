@@ -4,6 +4,10 @@ https://kenney.nl/assets/crosshair-pack
 Laser sound by Kronos1001 (Freesound) - freesound_community
 https://pixabay.com/sound-effects/laser-45816/
 
+Version 1.1
+- Seperated logic concerning the mouse from main.lua into mouseManager.lua
+- Added title
+
 Version 1.0
 - Added red (bad) and green (good) circles
 - Adjustet scoring and lives classes

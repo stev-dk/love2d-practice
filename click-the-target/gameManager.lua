@@ -8,6 +8,7 @@ GameManager.__index = GameManager
 local circleArray = {}
 
 local CIRCLE_RADIUS = 15
+local GAME_TITLE = "Circle Shooter"
 
 local spawnTimer = 0
 local spawnIntervalMin = 0.25
@@ -27,6 +28,10 @@ function GameManager:new(o)
     o = o or {}
     setmetatable(o, self)
     return o
+end
+
+function GameManager:load()
+    love.window.setTitle(GAME_TITLE)
 end
 
 function GameManager:updateAddCircles(dt)
