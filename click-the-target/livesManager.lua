@@ -1,18 +1,20 @@
 local LivesManager = {}
 LivesManager.__index = LivesManager
 
-local lives = 100
-
-local function loseLife()
-    lives = lives - 1
+function LivesManager:new(o)
+    o = o or {}
+    o.lives = 100
+    setmetatable(o, self)
+    return o
 end
 
 function LivesManager:loseLife()
-    loseLife()
+    self.lives = self.lives - 1
 end
 
 function LivesManager:draw()
-    love.graphics.print(string.format("Lives: %i", lives), 15, 15)
+    love.graphics.setColor(1,1,1)
+    love.graphics.print(string.format("Lives: %i", self.lives), 15, 15)
 end
 
 return LivesManager

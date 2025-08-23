@@ -1,6 +1,6 @@
 local Circle = require "circle"
-local LivesManager = require "livesManager"
-local ScoreManager = require "scoreManager"
+local LM = require "livesManager"
+local SM = require "scoreManager"
 
 local GameManager = {}
 GameManager.__index = GameManager
@@ -10,9 +10,12 @@ local circleArray = {}
 local CIRCLE_RADIUS = 15
 
 local spawnTimer = 0
-local spawnIntervalMin = 1.5
-local spawnIntervalMax = 2.5
+local spawnIntervalMin = 0.25
+local spawnIntervalMax = 0.85
 local spawnInterval = math.random(spawnIntervalMin, spawnIntervalMax)
+
+local livesManager = LM:new()
+local scoreManager = SM:new()
 
 local function spawnCircle(o)
     local radius = CIRCLE_RADIUS
@@ -45,8 +48,8 @@ function GameManager:draw()
         circle:draw()
     end
 
-    LivesManager:draw()
-    ScoreManager:draw()
+    livesManager:draw()
+    scoreManager:draw()
 end
 
 function GameManager:addCircle(newCircle)
@@ -55,9 +58,13 @@ end
 
 function GameManager:updateRemoveCircles()
     for i = #circleArray, 1, -1 do
-        if circleArray[i].hasTimedOut then
+        local circle = circleArray[i]
+
+        if circle.hasTimedOut then
             table.remove(circleArray, i)
-            LivesManager:loseLife()
+            if circle.type == "good" then
+                livesManager:loseLife()
+            end
         end
     end
 end
@@ -72,7 +79,12 @@ function GameManager:updateClicks(mouseX, mouseY)
 
         -- click was inside the circle...
         if distanceSquared <= circle.radius * circle.radius then
-            ScoreManager:addScore()
+            if circle.type == "good" then
+                scoreManager:addScore()
+            elseif circle.type == "bad" then
+                livesManager:loseLife()
+            end
+
             table.remove(circleArray, i)
         end
     end
