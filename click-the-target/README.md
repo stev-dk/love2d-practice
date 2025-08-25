@@ -4,6 +4,11 @@ https://kenney.nl/assets/crosshair-pack
 Laser sound by Kronos1001 (Freesound) - freesound_community
 https://pixabay.com/sound-effects/laser-45816/
 
+Version 1.2
+- Added sprites instead of generic circles
+- Added a 'parallaxed' background
+- Adjusted hitboxes
+
 Version 1.1
 - Seperated logic concerning the mouse from main.lua into mouseManager.lua
 - Added title

@@ -7,21 +7,41 @@ GameManager.__index = GameManager
 
 local circleArray = {}
 
-local CIRCLE_RADIUS = 15
 local GAME_TITLE = "Circle Shooter"
+local background
+local parallaxPower = 5
 
 local spawnTimer = 0
-local spawnIntervalMin = 0.25
-local spawnIntervalMax = 0.85
+local spawnIntervalMin = 0.5
+local spawnIntervalMax = 0.95
 local spawnInterval = math.random(spawnIntervalMin, spawnIntervalMax)
 
 local livesManager = LM:new()
 local scoreManager = SM:new()
 
 local function spawnCircle(o)
-    local radius = CIRCLE_RADIUS
-    local newCircle = Circle:new({radius = radius})
+    local newCircle = Circle:new()
     o:addCircle(newCircle)
+end
+
+local function drawParallaxBackgorund()
+    local windowHeight = love.graphics.getHeight()
+    local windowWidth = love.graphics.getWidth()
+
+    local backgroundShiftX = (background:getWidth() - windowWidth) / 2
+    local backgroundShiftY = (background:getHeight() - windowHeight) / 2
+
+    local mouseX = love.mouse.getX()
+    local mouseY = love.mouse.getY()
+
+    local parallaxX = (mouseX - (windowWidth / 2)) / parallaxPower
+    local parallaxY = (mouseY - (windowHeight / 2)) / parallaxPower
+
+    love.graphics.draw(background, -backgroundShiftX - parallaxX, -backgroundShiftY - parallaxY, math.deg(0), 1, 1)
+
+    -- DEBUG
+    love.graphics.print(string.format("X: %i, Y: %i", love.mouse.getX(), love.mouse.getY()), 15, 50)
+    -- DEBUG
 end
 
 function GameManager:new(o)
@@ -32,6 +52,7 @@ end
 
 function GameManager:load()
     love.window.setTitle(GAME_TITLE)
+    background = love.graphics.newImage('assets/space_background.png')
 end
 
 function GameManager:updateAddCircles(dt)
@@ -49,6 +70,8 @@ function GameManager:updateCircleTimers(dt)
 end
 
 function GameManager:draw()
+    drawParallaxBackgorund()
+
     for _, circle in ipairs(circleArray) do
         circle:draw()
     end
@@ -78,8 +101,8 @@ function GameManager:updateClicks(mouseX, mouseY)
     for i = #circleArray, 1, -1 do
         local circle = circleArray[i]
 
-        local dx = mouseX - circle.x
-        local dy = mouseY - circle.y
+        local dx = mouseX - circle.centerX
+        local dy = mouseY - circle.centerY
         local distanceSquared = dx * dx + dy * dy
 
         -- click was inside the circle...

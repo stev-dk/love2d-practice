@@ -31,8 +31,8 @@ end
 
 function MouseManager:load()
     love.mouse.setVisible(false)
-    clickSound = love.audio.newSource('laser.mp3', 'static')
-    crosshair = love.graphics.newImage('crosshair.png')
+    clickSound = love.audio.newSource('assets/laser.mp3', 'static')
+    crosshair = love.graphics.newImage('assets/crosshair.png')
 end
 
 function MouseManager:update()
